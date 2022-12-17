@@ -1,15 +1,15 @@
 package com.rwin.wxsend.web;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.rwin.wxsend.dao.mapper.ModelMapper;
 import com.rwin.wxsend.entity.Model;
 import com.rwin.wxsend.entity.dto.Result;
+import com.rwin.wxsend.util.FiledDataUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -32,7 +32,7 @@ public class ModelController {
 
 
 
-    /***
+    /**
      * 保存
      * 
      * @param request	
@@ -43,10 +43,10 @@ public class ModelController {
      */
     @RequestMapping(value = "save", method = RequestMethod.POST)
     @ResponseBody
-    public Result save(HttpServletRequest request, Model model){
+    public Result save(HttpServletRequest request, @RequestBody Model model){
         int r = 0;
-        if(model.getName() == null || model.getTemplateContent() == null || model.getFiledContent() == null){
-            return new Result(302, "参数不能为空");
+        if(model.getName() == null || model.getTemplateContent() == null ){
+            return new Result(Result.Param_notnull_code, Result.Param_notnull_msg);
         }
         if (model.getId() != null){
             //修改
@@ -76,24 +76,38 @@ public class ModelController {
 
 
     /***
-     * 查询一条数据
+     * 更据名称查询模板
      *
      * @param request
-     * @param query
      * @return com.rwin.wxsend.entity.dto.Result
      * @author zouhongwei
      * @date 2022/12/13
      */
-    @RequestMapping(value = "queryOne", method = RequestMethod.POST)
+    @RequestMapping(value = "searchByName", method = RequestMethod.GET)
     @ResponseBody
-    public Result queryOne(HttpServletRequest request, Model query){
-        Model model = modelMapper.selectOne(new QueryWrapper<>(query));
-        return new Result(model);
+    public Result searchByName(HttpServletRequest request, String name){
+        Model query = new Model();
+        query.setName(name);
+        List<Model> models = modelMapper.selectList(new QueryWrapper<>(query));
+        return new Result(CollectionUtil.isEmpty(models)? null : models.get(0));
     }
 
 
 
-    
+    /**
+     * 获取已实现的字段数据
+     * 
+     * @param request	
+     * @return com.rwin.wxsend.entity.dto.Result
+     * @author zouhongwei
+     * @date 2022/12/16
+     */
+    @RequestMapping(value = "listFiled", method = RequestMethod.GET)
+    @ResponseBody
+    public Result listFiled(HttpServletRequest request){
+        return new Result(FiledDataUtil.filedMap);
+    }
+
 
 
 }

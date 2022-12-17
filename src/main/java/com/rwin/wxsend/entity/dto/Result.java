@@ -13,11 +13,19 @@ import lombok.Data;
 @Data
 public class Result {
 
+    public static final int Apply_code_error_code = 301;
+    public static final String Apply_code_error_msg = "申请码错误";
+
+    public static final int Param_notnull_code = 302;
+    public static final String Param_notnull_msg = "参数不能为空";
+
     private int code;
 
     private String msg;
 
     private Object data;
+
+    private boolean succ = false;
 
     public Result(){}
 
@@ -29,6 +37,7 @@ public class Result {
     public Result(Object data){
         this.code = 200;
         this.msg = "成功";
+        this.succ = true;
         this.data = data;
     }
 }

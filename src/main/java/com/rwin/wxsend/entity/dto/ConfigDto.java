@@ -1,5 +1,7 @@
 package com.rwin.wxsend.entity.dto;
 
+import com.rwin.wxsend.entity.Config;
+import com.rwin.wxsend.entity.ModelConfig;
 import com.rwin.wxsend.entity.SendUser;
 import lombok.Data;
 
@@ -14,35 +16,17 @@ import java.util.List;
  */
 
 @Data
-public class MsgDto{
-
-    private String appId;
-
-    private String appSecret;
-
-    /**
-     * 公众号消息模板
-     */
-    private String modelCode;
-
-    /**
-     * 申请码
-     */
-    private String applyCode;
-
-    /**
-     * 发送时间
-     */
-    private String sendTime;
+public class ConfigDto extends Config {
 
     /**
      * 待发送用户
      */
     private List<SendUser> sendUsers;
 
-
-
-
+    /**
+     * 模板配置详情
+     */
+    private ModelConfig modelConfig;
 
 
 }

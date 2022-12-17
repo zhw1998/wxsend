@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
  * @create 2022/12/5
  */
 @Repository
-public interface sendUserMapper extends BaseMapper<SendUser> {
+public interface SendUserMapper extends BaseMapper<SendUser> {
 }

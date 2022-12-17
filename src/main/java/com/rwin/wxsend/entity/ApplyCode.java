@@ -1,7 +1,9 @@
 package com.rwin.wxsend.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -37,12 +39,15 @@ public class ApplyCode {
     /**
      * 创建时间
      */
-    @TableField(fill = FieldFill.INSERT)
+    @JSONField(format = "yyyy-MM-dd hh:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
      * 使用时间
      */
+    @JSONField(format = "yyyy-MM-dd hh:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date usedTime;
 
     /**

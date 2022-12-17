@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 配置实体
  * Copyright (C), 2016-2022, 杭州世平信息科技有限公司
@@ -18,13 +21,35 @@ import lombok.Data;
 @TableName("config")
 public class Config {
 
+    //关闭
+    public final static Integer Status_close = 0;
+
+    //开启
+    public final static Integer Status_open = 1;
+
+    //每天
+    public final static int Way_everyday = 1;
+
+    //工作日
+    public final static int Way_workday = 2;
+
+    //休息日
+    public final static int Way_offday = 3;
+
+
+
+    public final static Map<String, Integer> Way_map = new HashMap<>();
+
+    static {
+        Way_map.put("每天", Way_everyday);
+        Way_map.put("工作日", Way_workday);
+        Way_map.put("休息日", Way_offday);
+    }
+
+
+
     @TableId(type = IdType.AUTO)
     private Integer id;
-
-    /**
-     * 申请id
-     */
-    private String applyCodeId;
 
     /**
      * 申请码
@@ -42,9 +67,19 @@ public class Config {
     private String appSecret;
 
     /**
+     * 发送方式策略
+     */
+    private Integer way;
+
+    /**
      * 发送时间
      */
     private String sendTime;
+
+    /**
+     * 状态 0-关闭 1-开启
+     */
+    private Integer status = 0;
 
 
 
