@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.rwin.wxsend.dao.mapper.ModelMapper;
 import com.rwin.wxsend.entity.Model;
 import com.rwin.wxsend.entity.dto.Result;
-import com.rwin.wxsend.util.FiledDataUtil;
+import com.rwin.wxsend.filed.FiledMethod;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +25,6 @@ import java.util.List;
 @RequestMapping(value = "/model")
 @Slf4j
 public class ModelController {
-
 
     @Autowired
     private ModelMapper modelMapper;
@@ -74,9 +73,27 @@ public class ModelController {
     }
 
 
+    /***
+     * 模板删除
+     *
+     * @param request
+     * @return com.rwin.wxsend.entity.dto.Result
+     * @author zouhongwei
+     * @date 2022/12/13
+     */
+    @RequestMapping(value = "delete", method = RequestMethod.GET)
+    @ResponseBody
+    public Result delete(HttpServletRequest request, Integer id){
+        if(id == null){
+            return new Result(Result.Param_notnull_code, Result.Param_notnull_msg);
+        }
+        int r = modelMapper.deleteById(id);
+        return new Result(null);
+    }
+
 
     /***
-     * 更据名称查询模板
+     * 根据名称查询模板
      *
      * @param request
      * @return com.rwin.wxsend.entity.dto.Result
@@ -105,7 +122,7 @@ public class ModelController {
     @RequestMapping(value = "listFiled", method = RequestMethod.GET)
     @ResponseBody
     public Result listFiled(HttpServletRequest request){
-        return new Result(FiledDataUtil.filedMap);
+        return new Result(FiledMethod.filedMap);
     }
 
 

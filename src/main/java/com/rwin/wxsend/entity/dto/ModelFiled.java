@@ -25,4 +25,8 @@ public class ModelFiled {
      * 参数值
      */
     private String value;
+    /**
+     * 颜色
+     */
+    private String color;
 }

@@ -1,7 +1,6 @@
 package com.rwin.wxsend.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.rwin.wxsend.entity.Config;
 import com.rwin.wxsend.entity.ModelConfig;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +13,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ModelConfigMapper extends BaseMapper<ModelConfig> {
+
 
 }

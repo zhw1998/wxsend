@@ -13,6 +13,7 @@ import com.rwin.wxsend.entity.ModelConfig;
 import com.rwin.wxsend.entity.SendUser;
 import com.rwin.wxsend.entity.dto.ConfigDto;
 import com.rwin.wxsend.entity.dto.Result;
+import com.rwin.wxsend.util.WayFilterUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -117,7 +118,7 @@ public class ConfigController {
             r = sendUserMapper.delete(new QueryWrapper<>(sendUserQuery));
             List<SendUser> sendUsers = configDto.getSendUsers();
             sendUsers.stream().forEach(sendUser -> {
-                sendUser.setId(null);
+                sendUser.setConfigId(config.getId());
                 sendUserMapper.insert(sendUser);
             });
         }else {
@@ -125,13 +126,17 @@ public class ConfigController {
             int r = configMapper.insert(config);
             //保存模板配置信息
             ModelConfig modelConfig = configDto.getModelConfig();
+            modelConfig.setConfigId(config.getId());
             r = modelConfigMapper.insert(modelConfig);
             //添加
             List<SendUser> sendUsers = configDto.getSendUsers();
             sendUsers.stream().forEach(sendUser -> {
-                sendUser.setId(null);
+                sendUser.setConfigId(config.getId());
                 sendUserMapper.insert(sendUser);
             });
+            //修改申请码为已使用
+            applyCode.setStatus(ApplyCode.Status_used);
+            applyCodeMapper.updateById(applyCode);
         }
         return new Result(config.getId());
     }
@@ -148,7 +153,7 @@ public class ConfigController {
     @RequestMapping(value = "getWay", method = RequestMethod.GET)
     @ResponseBody
     public Result getSendWay(HttpServletRequest request){
-        return new Result(Config.Way_map);
+        return new Result(WayFilterUtil.Way_map);
     }
 
 }

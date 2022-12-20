@@ -1,7 +1,7 @@
 package com.rwin.wxsend.util;
 
-import com.rwin.wxsend.entity.Config;
 import com.rwin.wxsend.entity.dto.DateDto;
+import com.rwin.wxsend.filed.Filed;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,11 +16,30 @@ import java.util.*;
  */
 public class WayFilterUtil {
 
+
+    //每天
+    public final static int Way_everyday = 1;
+
+    //工作日
+    public final static int Way_workday = 2;
+
+    //休息日
+    public final static int Way_offday = 3;
+
+
+    public static Map<String, Integer> Way_map = new HashMap<>();
+
+    static {
+        Way_map.put("每天", Way_everyday);
+    }
+
+
     @Getter
     @Setter
     public static List<DateDto> dateList = new ArrayList<>();
 
     @Setter
+    @Getter
     public static Map<String, DateDto> dateDtoMap = new HashMap<>();
 
     /**
@@ -38,44 +57,11 @@ public class WayFilterUtil {
             return false;
         }
         switch (way){
-            case Config.Way_everyday : return true;
-            case Config.Way_workday : return workdayWay(nowDate);
-            case Config.Way_offday : return offdayWay(nowDate);
+            case Way_everyday : return true;
+            case Way_workday : return workdayWay(nowDate);
+            case Way_offday : return offdayWay(nowDate);
             default: return false;
         }
-    }
-
-
-    /**
-     * 工作日
-     *
-     * @return boolean
-     * @author zouhongwei
-     * @date 2022/12/16
-     */
-    private static boolean workdayWay(Date nowDate){
-        String date = DateUtil.convertDate2String(nowDate);
-        DateDto dateDto = dateDtoMap.get(date);
-        if(dateDto != null && dateDto.getIsWork() == DateDto.IsWork_yes){
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 休息日
-     *
-     * @return boolean
-     * @author zouhongwei
-     * @date 2022/12/16
-     */
-    private static boolean offdayWay(Date nowDate){
-        String date = DateUtil.convertDate2String(nowDate);
-        DateDto dateDto = dateDtoMap.get(date);
-        if(dateDto != null && dateDto.getIsWork() == DateDto.IsWork_no){
-            return true;
-        }
-        return false;
     }
 
 
@@ -95,6 +81,41 @@ public class WayFilterUtil {
         Date afterDate = new Date(nowDate.getTime() + 5*60*1000);
         Date sendDate = DateUtil.convertString2Date( DateUtil.getCurrentStringDate()+ " " + sendTime + ":00", DateUtil.LONG_DATE_FORMAT);
         if(sendDate.compareTo(beforeDate) > 0 && sendDate.compareTo(afterDate) <= 0){
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * 工作日
+     *
+     * @return boolean
+     * @author zouhongwei
+     * @date 2022/12/16
+     */
+    @Filed(name = "工作日", value = Way_workday+"")
+    private static boolean workdayWay(Date nowDate){
+        String date = DateUtil.convertDate2String(nowDate);
+        DateDto dateDto = dateDtoMap.get(date);
+        if(dateDto != null && DateDto.IsWork_yes.equals(dateDto.getIsWork())){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 休息日
+     *
+     * @return boolean
+     * @author zouhongwei
+     * @date 2022/12/16
+     */
+    @Filed(name = "休息日", value = Way_offday+"")
+    private static boolean offdayWay(Date nowDate){
+        String date = DateUtil.convertDate2String(nowDate);
+        DateDto dateDto = dateDtoMap.get(date);
+        if(dateDto != null && dateDto.getIsWork() == DateDto.IsWork_no){
             return true;
         }
         return false;

@@ -27,25 +27,6 @@ public class Config {
     //开启
     public final static Integer Status_open = 1;
 
-    //每天
-    public final static int Way_everyday = 1;
-
-    //工作日
-    public final static int Way_workday = 2;
-
-    //休息日
-    public final static int Way_offday = 3;
-
-
-
-    public final static Map<String, Integer> Way_map = new HashMap<>();
-
-    static {
-        Way_map.put("每天", Way_everyday);
-        Way_map.put("工作日", Way_workday);
-        Way_map.put("休息日", Way_offday);
-    }
-
 
 
     @TableId(type = IdType.AUTO)
@@ -79,8 +60,7 @@ public class Config {
     /**
      * 状态 0-关闭 1-开启
      */
-    private Integer status = 0;
-
+    private Integer status;
 
 
 }
