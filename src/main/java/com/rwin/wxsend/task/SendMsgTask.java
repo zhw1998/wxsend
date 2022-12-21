@@ -44,6 +44,8 @@ public class SendMsgTask {
     private ModelConfigMapper modelConfigMapper;
     @Autowired
     private SendUserMapper sendUserMapper;
+    @Autowired
+    private WayFilterUtil wayFilterUtil;
 
     /***
      * 定时执行消息推送任务 异步执行
@@ -63,7 +65,7 @@ public class SendMsgTask {
         List<Config> configList = configMapper.selectList(new QueryWrapper<>(query));
         //过滤需要发送的消息
         List<Config> sendConfigs = configList.stream().filter(config -> {
-            return WayFilterUtil.isAllow(config.getWay(), config.getSendTime(), nowDate);
+            return wayFilterUtil.isAllow(config.getWay(), config.getWayValue(), config.getSendTime(), nowDate);
         }).collect(Collectors.toList());
         if(CollectionUtil.isEmpty(sendConfigs)) {
             return;

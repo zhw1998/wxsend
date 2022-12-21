@@ -50,7 +50,12 @@ public class Config {
     /**
      * 发送方式策略
      */
-    private Integer way;
+    private String way;
+
+    /**
+     * 策略值
+     */
+    private String wayValue;
 
     /**
      * 发送时间

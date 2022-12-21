@@ -5,6 +5,8 @@ import com.rwin.wxsend.filed.FiledMethod;
 import com.rwin.wxsend.filed.data.FiledData;
 import lombok.extern.log4j.Log4j2;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 字段数据获取工具类
@@ -20,6 +22,11 @@ import java.lang.reflect.Method;
 @Log4j2
 public class FiledDataUtil {
 
+    /**
+     * 已实现方法
+     */
+    public static Map<String, Method> FiledMethodMap = new HashMap<>();
+
 
     /**
      * 根据字段获取数据
@@ -33,8 +40,7 @@ public class FiledDataUtil {
         try {
             FiledMethod filedMethod = SpringUtil.getBean(FiledMethod.class);
             String[] fileds = modelFiled.getKey().split("_");
-            String methodName = String.format("get%s", StringUtil.toUpperCaseFirstOne(fileds[0]));
-            Method method = filedMethod.getClass().getMethod(methodName, String.class);
+            Method method = FiledMethodMap.get(fileds[0]);
             if(method == null){
                 return modelFiled.getValue();
             }

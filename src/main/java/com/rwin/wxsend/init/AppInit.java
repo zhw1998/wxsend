@@ -10,6 +10,7 @@ import com.rwin.wxsend.filed.FiledMethod;
 import com.rwin.wxsend.filed.FiledName;
 import com.rwin.wxsend.filed.data.FiledData;
 import com.rwin.wxsend.util.ClassUtil;
+import com.rwin.wxsend.util.FiledDataUtil;
 import com.rwin.wxsend.util.SpringUtil;
 import com.rwin.wxsend.util.WayFilterUtil;
 import lombok.extern.log4j.Log4j2;
@@ -114,12 +115,13 @@ public class AppInit implements ApplicationRunner, ApplicationContextAware {
      * @date 2022/12/20
      */
     public void setWayMap(){
-        WayFilterUtil wayFilterUtil = new WayFilterUtil();
+        WayFilterUtil wayFilterUtil = SpringUtil.getBean(WayFilterUtil.class);
         Method[] methods = wayFilterUtil.getClass().getDeclaredMethods();
         for (Method method : methods){
             Filed filedData = method.getAnnotation(Filed.class);
             if(filedData != null){
-                WayFilterUtil.Way_map.put(filedData.name(), Integer.valueOf(filedData.value()));
+                WayFilterUtil.Way_map.put(filedData.name(), filedData.value());
+                WayFilterUtil.WayMethodMap.put(filedData.value(), method);
             }
         }
     }
@@ -142,6 +144,8 @@ public class AppInit implements ApplicationRunner, ApplicationContextAware {
         for (Method method : methods){
             Filed filedData = method.getAnnotation(Filed.class);
             if(filedData != null){
+                //设置已实现方法
+                FiledDataUtil.FiledMethodMap.put(filedData.value(), method);
                 Class returnType = method.getReturnType();
                 //如果返回值是对象
                 if(ClassUtil.newInstant(returnType) instanceof FiledData){

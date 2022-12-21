@@ -1,6 +1,5 @@
 package com.rwin.wxsend.filed.data;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.rwin.wxsend.filed.FiledName;
 import lombok.Data;
 
