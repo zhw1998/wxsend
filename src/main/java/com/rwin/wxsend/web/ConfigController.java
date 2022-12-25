@@ -13,7 +13,8 @@ import com.rwin.wxsend.entity.ModelConfig;
 import com.rwin.wxsend.entity.SendUser;
 import com.rwin.wxsend.entity.dto.ConfigDto;
 import com.rwin.wxsend.entity.dto.Result;
-import com.rwin.wxsend.util.WayFilterUtil;
+import com.rwin.wxsend.filter.AccessLimit;
+import com.rwin.wxsend.way.WayFilterUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -56,6 +57,7 @@ public class ConfigController {
      */
     @RequestMapping(value = "/searchByApplyCode", method = RequestMethod.GET)
     @ResponseBody
+    @AccessLimit(seconds = 1, maxCount = 3)
     public Result searchByApplyCode(HttpServletRequest request, String applyCode){
         if(applyCode == null){
             return new Result(Result.Param_notnull_code, Result.Param_notnull_msg);
@@ -94,6 +96,7 @@ public class ConfigController {
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
+    @AccessLimit(seconds = 1, maxCount = 3)
     public Result save(HttpServletRequest request, @RequestBody ConfigDto configDto){
         //验证申请码是否存在并且未使用
         ApplyCode query = new ApplyCode();
@@ -151,6 +154,7 @@ public class ConfigController {
      */
     @RequestMapping(value = "getWay", method = RequestMethod.GET)
     @ResponseBody
+    @AccessLimit(seconds = 1, maxCount = 3)
     public Result getSendWay(HttpServletRequest request){
         return new Result(WayFilterUtil.Way_map);
     }

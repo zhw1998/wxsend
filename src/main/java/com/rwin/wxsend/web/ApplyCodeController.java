@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.rwin.wxsend.dao.mapper.ApplyCodeMapper;
 import com.rwin.wxsend.entity.ApplyCode;
 import com.rwin.wxsend.entity.dto.Result;
+import com.rwin.wxsend.filter.AccessLimit;
 import com.rwin.wxsend.util.SerializerUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ public class ApplyCodeController {
      */
     @RequestMapping(value = "list", method = RequestMethod.GET)
     @ResponseBody
+    @AccessLimit(seconds = 1, maxCount = 3)
     public Result list(HttpServletRequest request){
         List<ApplyCode> applyCodes = applyCodeMapper.selectList(null);
         return new Result(SerializerUtil.serialize(applyCodes) );
@@ -65,6 +67,7 @@ public class ApplyCodeController {
      */
     @RequestMapping(value = "create", method = RequestMethod.GET)
     @ResponseBody
+    @AccessLimit(seconds = 1, maxCount = 3)
     public Result create(HttpServletRequest request, int num){
         if(num == 0){
             return new Result(null);

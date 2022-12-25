@@ -6,13 +6,14 @@ import cn.hutool.core.util.CharsetUtil;
 import com.alibaba.fastjson.JSON;
 import com.rwin.wxsend.entity.dto.DateDto;
 import com.rwin.wxsend.filed.Filed;
+import com.rwin.wxsend.filed.FiledDataUtil;
 import com.rwin.wxsend.filed.FiledMethod;
 import com.rwin.wxsend.filed.FiledName;
 import com.rwin.wxsend.filed.data.FiledData;
 import com.rwin.wxsend.util.ClassUtil;
-import com.rwin.wxsend.util.FiledDataUtil;
 import com.rwin.wxsend.util.SpringUtil;
-import com.rwin.wxsend.util.WayFilterUtil;
+import com.rwin.wxsend.way.WayFilterUtil;
+import com.rwin.wxsend.way.WayMethod;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.ApplicationArguments;
@@ -25,9 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.io.BufferedReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -92,12 +91,10 @@ public class AppInit implements ApplicationRunner, ApplicationContextAware {
                     sb.append(line);
                 }
                 List<DateDto> dateDtos = JSON.parseArray(sb.toString(), DateDto.class);
-                WayFilterUtil.setDateList(dateDtos);
-                Map<String, DateDto> dateDtoMap = new HashMap<>();
+                WayMethod.dateList = dateDtos;
                 for (DateDto dateDto : dateDtos){
-                    dateDtoMap.put(dateDto.getDate(), dateDto);
+                    WayMethod.dateDtoMap.put(dateDto.getDate(), dateDto);
                 }
-                WayFilterUtil.setDateDtoMap(dateDtoMap);
             }
         }catch (Exception e){
             log.error("日期数据初始化失败：{}", e);
@@ -115,8 +112,8 @@ public class AppInit implements ApplicationRunner, ApplicationContextAware {
      * @date 2022/12/20
      */
     public void setWayMap(){
-        WayFilterUtil wayFilterUtil = SpringUtil.getBean(WayFilterUtil.class);
-        Method[] methods = wayFilterUtil.getClass().getDeclaredMethods();
+        WayMethod wayMethod = SpringUtil.getBean(WayMethod.class);
+        Method[] methods = wayMethod.getClass().getDeclaredMethods();
         for (Method method : methods){
             Filed filedData = method.getAnnotation(Filed.class);
             if(filedData != null){

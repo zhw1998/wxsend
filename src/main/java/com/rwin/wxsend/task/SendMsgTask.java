@@ -12,8 +12,8 @@ import com.rwin.wxsend.entity.Config;
 import com.rwin.wxsend.entity.ModelConfig;
 import com.rwin.wxsend.entity.SendUser;
 import com.rwin.wxsend.entity.dto.ModelFiled;
-import com.rwin.wxsend.util.FiledDataUtil;
-import com.rwin.wxsend.util.WayFilterUtil;
+import com.rwin.wxsend.filed.FiledDataUtil;
+import com.rwin.wxsend.way.WayFilterUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -22,7 +22,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -44,8 +47,6 @@ public class SendMsgTask {
     private ModelConfigMapper modelConfigMapper;
     @Autowired
     private SendUserMapper sendUserMapper;
-    @Autowired
-    private WayFilterUtil wayFilterUtil;
 
     /***
      * 定时执行消息推送任务 异步执行
@@ -65,7 +66,7 @@ public class SendMsgTask {
         List<Config> configList = configMapper.selectList(new QueryWrapper<>(query));
         //过滤需要发送的消息
         List<Config> sendConfigs = configList.stream().filter(config -> {
-            return wayFilterUtil.isAllow(config.getWay(), config.getWayValue(), config.getSendTime(), nowDate);
+            return WayFilterUtil.isAllow(config.getWay(), config.getWayValue(), config.getSendTime(), nowDate);
         }).collect(Collectors.toList());
         if(CollectionUtil.isEmpty(sendConfigs)) {
             return;

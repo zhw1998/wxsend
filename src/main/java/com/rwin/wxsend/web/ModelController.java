@@ -6,6 +6,7 @@ import com.rwin.wxsend.dao.mapper.ModelMapper;
 import com.rwin.wxsend.entity.Model;
 import com.rwin.wxsend.entity.dto.Result;
 import com.rwin.wxsend.filed.FiledMethod;
+import com.rwin.wxsend.filter.AccessLimit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,6 +43,7 @@ public class ModelController {
      */
     @RequestMapping(value = "save", method = RequestMethod.POST)
     @ResponseBody
+    @AccessLimit(seconds = 1, maxCount = 3)
     public Result save(HttpServletRequest request, @RequestBody Model model){
         int r = 0;
         if(model.getName() == null || model.getTemplateContent() == null ){
@@ -67,6 +69,7 @@ public class ModelController {
      */
     @RequestMapping(value = "list", method = RequestMethod.GET)
     @ResponseBody
+    @AccessLimit(seconds = 1, maxCount = 3)
     public Result list(HttpServletRequest request){
         List<Model> models = modelMapper.selectList(null);
         return new Result(models);
@@ -83,6 +86,7 @@ public class ModelController {
      */
     @RequestMapping(value = "delete", method = RequestMethod.GET)
     @ResponseBody
+    @AccessLimit(seconds = 1, maxCount = 3)
     public Result delete(HttpServletRequest request, Integer id){
         if(id == null){
             return new Result(Result.Param_notnull_code, Result.Param_notnull_msg);
@@ -102,6 +106,7 @@ public class ModelController {
      */
     @RequestMapping(value = "searchByName", method = RequestMethod.GET)
     @ResponseBody
+    @AccessLimit(seconds = 1, maxCount = 3)
     public Result searchByName(HttpServletRequest request, String name){
         Model query = new Model();
         query.setName(name);
@@ -121,6 +126,7 @@ public class ModelController {
      */
     @RequestMapping(value = "listFiled", method = RequestMethod.GET)
     @ResponseBody
+    @AccessLimit(seconds = 1, maxCount = 3)
     public Result listFiled(HttpServletRequest request){
         return new Result(FiledMethod.filedMap);
     }
