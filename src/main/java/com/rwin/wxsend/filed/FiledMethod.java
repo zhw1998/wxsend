@@ -36,6 +36,17 @@ public class FiledMethod {
      */
     public static Map<String, String> filedMap = new HashMap<>();
 
+    /**
+     * 获取日期
+     * value
+     * @return java.lang.String
+     * @date 2022/12/19
+     */
+    @Filed(name = "当天日期[无]", value = "today")
+    public String getToday(String value){
+        String curDate = DateUtil.getCurrentStringDate();
+        return curDate;
+    }
 
     /**
      * 获取星期
@@ -110,12 +121,21 @@ public class FiledMethod {
     public String getChickenWord(String value){
         String json = HttpUtil.get(environment.getProperty("chickenWord.url"));
         Map<String, String> map = JSON.parseObject(json, HashMap.class);
-        String rs = map.get("content") + "\n" + map.get("note");
-        return map.get("note");
+        String rs = map.get("content") + "\r\n" + map.get("note");
+        return rs;
     }
 
 
 
+    /**
+     * 毒鸡汤 励志，鸡汤
+     * @return
+     */
+    @Filed(name = "情话[无]", value = "loveWord")
+    public String getLoveWord(String value){
+        String json = HttpUtil.get(environment.getProperty("loveWord.url"));
+        return json;
+    }
 
 
 
@@ -123,7 +143,7 @@ public class FiledMethod {
     public static void main(String[] args) {
         String json = HttpUtil.get("http://open.iciba.com/dsapi/");
         Map<String, String> map = JSON.parseObject(json, HashMap.class);
-        String rs = map.get("content") + "\n" + map.get("note");
+        String rs = map.get("content") + "\r\n" + map.get("note");
         System.out.println(rs);
     }
 
